@@ -89,7 +89,8 @@ mod tests {
 
     impl FirefoxAccount {
         fn add_cached_token(&mut self, scope: &str, token_info: AccessTokenInfo) {
-            self.access_token_cache
+            self.state
+                .access_token_cache
                 .insert(scope.to_string(), token_info);
         }
     }

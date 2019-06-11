@@ -46,6 +46,7 @@ impl FirefoxAccount {
             commands_data: HashMap::new(),
             device_capabilities: HashSet::new(),
             session_token: None,
+            access_token_cache: HashMap::new(),
         }))
     }
 

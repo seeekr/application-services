@@ -61,7 +61,6 @@ type FxAClient = dyn http_client::FxAClient + Sync + Send;
 pub struct FirefoxAccount {
     client: Arc<FxAClient>,
     state: StateV2,
-    access_token_cache: HashMap<String, AccessTokenInfo>,
     flow_store: HashMap<String, OAuthFlow>,
     profile_cache: Option<CachedResponse<Profile>>,
 }
@@ -83,6 +82,8 @@ pub(crate) struct StateV2 {
     commands_data: HashMap<String, String>,
     #[serde(default)] // Same
     device_capabilities: HashSet<DeviceCapability>,
+    #[serde(default)] // Same
+    access_token_cache: HashMap<String, AccessTokenInfo>,
     session_token: Option<String>, // Hex-formatted string.
 }
 
@@ -91,7 +92,6 @@ impl FirefoxAccount {
         Self {
             client: Arc::new(http_client::Client::new()),
             state,
-            access_token_cache: HashMap::new(),
             flow_store: HashMap::new(),
             profile_cache: None,
         }
@@ -111,6 +111,7 @@ impl FirefoxAccount {
             commands_data: HashMap::new(),
             device_capabilities: HashSet::new(),
             session_token: None,
+            access_token_cache: HashMap::new(),
         })
     }
 

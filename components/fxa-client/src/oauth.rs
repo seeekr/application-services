@@ -32,7 +32,7 @@ impl FirefoxAccount {
         if scope.contains(' ') {
             return Err(ErrorKind::MultipleScopesRequested.into());
         }
-        if let Some(oauth_info) = self.access_token_cache.get(scope) {
+        if let Some(oauth_info) = self.state.access_token_cache.get(scope) {
             if oauth_info.expires_at > util::now_secs() + OAUTH_MIN_TIME_LEFT {
                 return Ok(oauth_info.clone());
             }
@@ -77,7 +77,8 @@ impl FirefoxAccount {
             key: self.state.scoped_keys.get(scope).cloned(),
             expires_at,
         };
-        self.access_token_cache
+        self.state
+            .access_token_cache
             .insert(scope.to_string(), token_info.clone());
         Ok(token_info)
     }
@@ -261,7 +262,7 @@ impl FirefoxAccount {
     }
 
     pub fn clear_access_token_cache(&mut self) {
-        self.access_token_cache.clear();
+        self.state.access_token_cache.clear();
     }
 }
 
